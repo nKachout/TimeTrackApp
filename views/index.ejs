@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>
+        Hello World ! <%= ma_variable%>
+    </p>
+    <div class="container">
+        <input type="file" value="Choose TXT File" id="demoPickA"
+            accept="text/plain" onchange="readFileA()"/>
+        <div id="demoShowA"></div>
+        <script>
+            function readFileA () {
+            // (A) GET SELECTED FILE
+            let selected = document.getElementById("demoPickA").files[0];
+            
+            // (B) READ SELECTED FILE
+            let reader = new FileReader();
+            reader.addEventListener("loadend", () => {
+                document.getElementById("demoShowA").innerHTML = reader.result;
+            });
+            reader.readAsText(selected);
+            }
+            
+        </script>
+    </div>
+</body>
+</html>
