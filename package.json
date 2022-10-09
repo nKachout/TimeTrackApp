@@ -4,8 +4,10 @@
     "description": "web app that allow to track efficiently time",
     "main": "index.js",
     "dependencies": {
+        "crypto": "^1.0.1",
         "ejs": "^2.6.1",
         "express": "^4.18.1",
+        "formidable": "^2.0.1",
         "ical.js": "^1.5.0",
         "mongoose": "^5.3.15",
         "socket.io": "^3.0.5"
