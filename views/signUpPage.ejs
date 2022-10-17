@@ -25,18 +25,29 @@
 	
 	<div class="limiter">
 		<div class="container-login100">
+			<span class="login100-form-title">
+				<%=message%>
+			</span>
 			<div class="wrap-login100">
 				<div class="login100-pic js-tilt" data-tilt>
 					<img src="/public/images/img-01.png" alt="IMG">
 				</div>
 
-				<form class="login100-form validate-form">
+				<form class="login100-form validate-form" method="POST" action="/user/signup">
 					<span class="login100-form-title">
 						Merci de faire un pas vers nous 
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Une addresse mail valide est requise: ex@abc.xyz">
-						<input class="input100" type="text" name="username" placeholder="Nom d'utilisateur">
+						<input class="input100" type="text" id="username" name="username" placeholder="Nom d'utilisateur">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-envelope" aria-hidden="true"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Une addresse mail valide est requise: ex@abc.xyz">
+						<input class="input100" type="text" id="email" name="email" placeholder="Addresse mail">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<i class="fa fa-envelope" aria-hidden="true"></i>
@@ -44,7 +55,7 @@
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate = "Le mot de passe est nécessaire">
-						<input class="input100" type="password" name="password" placeholder="Mot de passe">
+						<input class="input100" type="password" id="password" name="password" placeholder="Mot de passe">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<i class="fa fa-lock" aria-hidden="true"></i>
@@ -52,13 +63,11 @@
 					</div>
 					
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
-							Inscription
-						</button>
+						<input  class="login100-form-btn" type="submit" value="Inscription"></input>
 					</div>
 
 					<div class="text-center p-t-136">
-						<a class="txt2" href="/user/signup">
+						<a class="txt2" href="/?message=">
                             <i class="fa fa-long-arrow-left m-l-5" aria-hidden="true"></i>
 							Retour à l'écran d'accueil
 						</a>

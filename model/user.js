@@ -16,7 +16,7 @@ const UserSchema = mongoose.Schema({
     passwordHash : String, 
     salt : String 
 }); 
-  
+
 // Method to set salt and hash the password for a user 
 UserSchema.methods.setPassword = function(password) { 
      
@@ -30,6 +30,12 @@ UserSchema.methods.validPassword = function(password) {
 
     var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, `sha512`).toString(`hex`); 
     return this.passwordHash === hash; 
+
+}; 
+var UserSchemaDb = mongoose.model('UserSchema', UserSchema );
+UserSchema.methods.isPresent = function(_username) { 
+
+    return UserSchemaDb.findOne({username: _username});
 
 }; 
   

@@ -9,10 +9,12 @@
 </head>
 <body>
     <p>
-        Hello World ! <%= ma_variable%>
+        <%if(locals.message){%>
+            <%=message %>
+        <%}%>
     </p>
-    <form method="post" action="/getIcsInfo" enctype="multipart/form-data">
-        <input type="file" value="Charger ICS" name="demoPickA"/>
+    <form method="POST" action="/calendar/setCalendari" enctype="multipart/form-data">
+        <input type="file" value="Charger ICS" name="calendar"/>
         <button type="submit">Valider</button>
         <div id="demoShowA"></div>
     </form>

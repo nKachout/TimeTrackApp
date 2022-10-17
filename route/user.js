@@ -1,30 +1,30 @@
 // Importing modules 
 const express = require('express'); 
+const { db } = require('../model/user');
 const router = express.Router(); 
-
 // Importing User Schema 
 const User = require('../model/user'); 
 
 // User login api 
 router.post('/login', (req, res) => { 
-
+    console.log("user login"); 
     // Find user with requested email 
     User.findOne({ username : req.body.username }, function(err, user) { 
         if (user === null) { 
-            return res.status(400).send({ 
-                message : "User not found."
-            }); 
+            return res.status(400).render("loginPage.ejs",{ 
+                message : "Ce compte n'existe pas"
+            });
         } 
         else { 
             if (user.validPassword(req.body.password)) { 
-                return res.status(201).send({ 
-                    message : "User Logged In", 
-                }) 
+                return res.status(201).render("index.ejs",{ 
+                    ma_variable : req.body.username
+                });
             } 
             else { 
-                return res.status(400).send({ 
-                    message : "Wrong Password"
-                }); 
+                return res.status(400).render("loginPage.ejs",{ 
+                    message : "Nom d'utilisateur, ou mot de passe incorrect"
+                });
             } 
         } 
     }); 
@@ -32,21 +32,25 @@ router.post('/login', (req, res) => {
 
 // User signup api 
 router.post('/signup', (req, res, next) => { 
-
-
-// Creating empty user object 
+    // Creating empty user object 
     let newUser = new User(); 
+    if(newUser.isPresent()){
+        console.log(newUser.isPresent());
+        return res.status(400).render("signUpPage.ejs",{ 
+            message : "Cet utilisateur existe déjà"
+        });
+    }
 
     // Initialize newUser object with request data 
-    newUser.name = req.body.name, 
+    newUser.username = req.body.username, 
 
     newUser.email = req.body.email,
 
-
     newUser.password=req.body.password
 
-                    // Call setPassword function to hash password 
-                    newUser.setPassword(req.body.password); 
+    // Call setPassword function to hash password 
+    newUser.setPassword(req.body.password); 
+    console.log(JSON.stringify(newUser));
 
     // Save newUser object to database 
     newUser.save((err, User) => { 
@@ -56,9 +60,9 @@ router.post('/signup', (req, res, next) => {
             }); 
         } 
         else { 
-            return res.status(201).send({ 
-                message : "User added successfully."
-            }); 
+            return res.status(201).render("signUpPage.ejs",{ 
+                message : "Inscription aves succés!"
+            });
         } 
     }); 
 }); 
