@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 var crypto = require("crypto");
 
 // Creating user schema
-const UserSchema = mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -14,6 +14,7 @@ const UserSchema = mongoose.Schema({
   },
   passwordHash: String,
   salt: String,
+  calendars:[],
 });
 
 // Method to set salt and hash the password for a user

@@ -1,4 +1,5 @@
 // Importing modules
+const { Router } = require("express");
 const express = require("express");
 const { db } = require("../model/user");
 const router = express.Router();
@@ -62,5 +63,7 @@ router.post("/signup", (req, res, next) => {
     }
   });
 });
+
+
 // Export module to allow it to be imported in other files
 module.exports = router;
