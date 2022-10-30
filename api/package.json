@@ -4,6 +4,7 @@
     "description": "web app that allow to track efficiently time",
     "main": "index.js",
     "dependencies": {
+        "cors": "^2.8.5",
         "crypto": "^1.0.1",
         "ejs": "^2.6.1",
         "express": "^4.18.1",

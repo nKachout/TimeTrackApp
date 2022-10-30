@@ -11,20 +11,20 @@ var db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 var express = require("express");
-/*var ICAL = require('ical.js');
- */
 const { strictEqual } = require("assert");
 const { Console } = require("console");
+const cors = require("cors");
 
 var app = express();
 const path = require("path");
-const uploadFolder = path.join(__dirname, "static", "files");
 const bodyParser = require("body-parser");
 app.set("views", path.join(__dirname, "/views"));
 // set the view engine to ejs
 app.set("view engine", "ejs");
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 
 // Tous les fichiers qui seront dans le dossier /public seront directement accessible
 // Par exemple, si il y a un fichier image.jpeg dans notre dossier public, il sera accessible via le lien /image.jpeg
