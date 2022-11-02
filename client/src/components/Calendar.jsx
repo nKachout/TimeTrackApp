@@ -1,4 +1,5 @@
 import React from "react";
+import {Box} from "@mui/material";
 import {
   ViewState,
   EditingState,
@@ -12,6 +13,7 @@ import {
   AppointmentForm,
   ViewSwitcher,
   Toolbar,
+  DateNavigator,
 } from "@devexpress/dx-react-scheduler-material-ui";
 
 export default function Calendar() {
@@ -20,7 +22,7 @@ React.useEffect(() => {
     const fetchData = async () => {
         const data = await fetch("http://127.0.0.1:8080/calendar/getCalendar", {
             method: "POST",
-            body: JSON.stringify({ name: "edt_.ics" }),
+            body: JSON.stringify({ name: "edt.ics" }),
             headers: { 'Content-Type': 'application/json' }
           })
         const json = await data.json();
@@ -31,17 +33,23 @@ React.useEffect(() => {
   }, []);
   return (
     <div id="calendar">
-      <Scheduler locale={"fr-FR"} data={schedulerData} firstDayOfWeek={1}>
+    <Box sx={{
+          "& .MuiTableCell-root": {
+            borderRight: "none",
+          }
+          }}>
+    <Scheduler locale={"fr-FR"} data={schedulerData} firstDayOfWeek={1}>
         <ViewState />
         <EditingState />
         <IntegratedEditing />
-        <WeekView />
-        <MonthView />
+        <WeekView startDayHour={7} endDayHour={22} displayName="Semaine"/>
+        <MonthView displayName="Mois"/>
         <Appointments />
-        <AppointmentForm/>
         <Toolbar/>
+        <DateNavigator/>
         <ViewSwitcher/>
       </Scheduler>
+    </Box>
     </div>
   );
 }

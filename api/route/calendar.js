@@ -19,8 +19,8 @@ function Calendar(_name, _size, _content) {
 
 function Evt(event) {
   this.title = event.getFirstPropertyValue("summary");
-  this.startDate = event.getFirstPropertyValue("dtstart");
-  this.endDate = event.getFirstPropertyValue("dtend");
+  this.startDate = event.getFirstPropertyValue("dtstart").toLocaleString("fr-FR", {timeZone: 'Europe/Paris'});
+  this.endDate = event.getFirstPropertyValue("dtend").toLocaleString("fr-FR", {timeZone: 'Europe/Paris'});
   this.id = event.getFirstPropertyValue("uid");
   this.location = event.getFirstPropertyValue("location");
 }
