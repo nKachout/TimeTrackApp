@@ -24,7 +24,7 @@ app.set("view engine", "ejs");
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.use(express.json({ limit: '6mb' }));
 
 // Tous les fichiers qui seront dans le dossier /public seront directement accessible
 // Par exemple, si il y a un fichier image.jpeg dans notre dossier public, il sera accessible via le lien /image.jpeg

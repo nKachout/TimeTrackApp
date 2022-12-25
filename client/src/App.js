@@ -3,6 +3,10 @@ import "./App.css";
 import Calendar from "./components/Calendar";
 import Dashboard from "./scenes/dashboard";
 import Topbar from "./scenes/global/Topbar";
+import BumpGraph from "./scenes/bump";
+import Login from "./scenes/form/Login";
+import Signin from "./scenes/form/Signin";
+import React from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import { useState } from "react";
@@ -11,6 +15,7 @@ import { Routes, Route } from "react-router-dom";
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
@@ -19,8 +24,11 @@ function App() {
           <main className="content">
             <Topbar setIsSidebar={setIsSidebar} />
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<Login />} />
+              <Route path="/signin" element={<Signin />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/calendar" element={<Calendar />} />
+              <Route path="/bump" element={<BumpGraph />} />
             </Routes>
           </main>
         </div>

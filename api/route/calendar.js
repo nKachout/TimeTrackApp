@@ -19,28 +19,36 @@ function Calendar(_name, _size, _content) {
 
 function Evt(event) {
   this.title = event.getFirstPropertyValue("summary");
-  this.startDate = event.getFirstPropertyValue("dtstart").toLocaleString("fr-FR", {timeZone: 'Europe/Paris'});
-  this.endDate = event.getFirstPropertyValue("dtend").toLocaleString("fr-FR", {timeZone: 'Europe/Paris'});
+  this.startDate = event
+    .getFirstPropertyValue("dtstart")
+    .toLocaleString("fr-FR", { timeZone: "Europe/Paris" });
+  this.endDate = event
+    .getFirstPropertyValue("dtend")
+    .toLocaleString("fr-FR", { timeZone: "Europe/Paris" });
   this.id = event.getFirstPropertyValue("uid");
   this.location = event.getFirstPropertyValue("location");
 }
 
-router.post("/addCalendar", (req, res, next) => {
+router.post("/addCalendar", async (req, res, next) => {
   const form = new formidable.IncomingForm();
   form.maxFileSize = 50 * 1024 * 1024; // 5MB
   form.parse(req, async (err, fields, files) => {
-    var data = fs.readFileSync(files.calendar.filepath);
-    let newCalendar = new Calendar(
-      files.calendar.originalFilename,
-      files.calendar.size,
-      Binary(data)
-    );
-    User.updateOne(
-      { _id: ObjectId("63468c2b85c7c92acc2da910") },
-      { $push: { calendars: newCalendar } }
-    ).then((x) => {
-      res.render("index.ejs", { message: "Ajouté avec succés" });
-    });
+    if (!err) {
+      var data = fs.readFileSync(files.calendar.filepath);
+      let newCalendar = new Calendar(
+        files.calendar.originalFilename,
+        files.calendar.size,
+        Binary(data)
+      );
+      User.updateOne(
+        { _id: ObjectId("63468c2b85c7c92acc2da910") },
+        { $push: { calendars: newCalendar } }
+      ).then((x) => {
+        res.send({ message: "Ajouté avec succés" });
+      });
+    } else {
+      console.log(err);
+    }
   });
 });
 

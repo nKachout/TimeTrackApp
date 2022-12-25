@@ -8,22 +8,22 @@ const User = require("../model/user");
 
 // User login api
 router.post("/login", (req, res) => {
-  console.log("user login");
   // Find user with requested email
-  User.findOne({ username: req.body.username }, function (err, user) {
+  User.findOne({ username: req.body.userName }, function (err, user) {
     if (user === null) {
-      return res.status(400).render("loginPage.ejs", {
+      return res.json({ severity : "info",
         message: "Ce compte n'existe pas",
       });
     } else {
       if (user.validPassword(req.body.password)) {
-        return res.status(201).render("index.ejs", {
-          ma_variable: req.body.username,
+        return res.status(201).json({
+          userData: {userName : req.body.userName,
+          email : user.email}
         });
       } else {
-        return res.status(400).render("loginPage.ejs", {
-          message: "Nom d'utilisateur, ou mot de passe incorrect",
-        });
+        return res.json({ severity : "error",
+        message: "Nom d'utilisateur, ou mot de passe incorrect",
+      });
       }
     }
   });
@@ -32,16 +32,15 @@ router.post("/login", (req, res) => {
 // User signup api
 router.post("/signup", (req, res, next) => {
   // Creating empty user object
-
-  User.findOne({ username: req.body.username }, function (err, user) {
+  User.findOne({ username: req.body.userName }, function (err, user) {
     if (user !== null) {
-      return res.status(400).render("signUpPage.ejs", {
+      return res.json({ severity : "info",
         message: "Cet utilisateur existe déjà",
       });
     } else {
       let newUser = new User();
       // Initialize newUser object with request data
-      (newUser.username = req.body.username),
+      (newUser.username = req.body.userName),
         (newUser.email = req.body.email),
         (newUser.password = req.body.password);
 
@@ -51,11 +50,11 @@ router.post("/signup", (req, res, next) => {
       // Save newUser object to database
       newUser.save((err, User) => {
         if (err) {
-          return res.status(400).send({
-            message: "Failed to add user.",
+          return res.json({severity : "error",
+            message: "L'inscription a échoué",
           });
         } else {
-          return res.status(201).render("signUpPage.ejs", {
+          return res.json({severity : "success",
             message: "Inscription aves succés!",
           });
         }
