@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { ResponsiveBump, Line } from "@nivo/bump";
+import { ResponsiveBump,} from "@nivo/bump";
 import { Box } from "@mui/material";
 export default function BumpGraph() {
   const [graphData, setGraphData] = useState([
