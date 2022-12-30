@@ -19,7 +19,7 @@ import {
 } from "@devexpress/dx-react-scheduler-material-ui";
 
 import AppointmentFormCustom from "./AppointmentFormCustom";
-
+import { addEvent, deleteEvent, updateEvent } from "../functions/taskActions";
 export default function Calendar() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -69,7 +69,7 @@ export default function Calendar() {
     },
     [setSchedulerData, setIsAppointmentBeingCreated, schedulerData]
   );
-  
+
   const onAddedAppointmentChange = React.useCallback((appointment) => {
     setAddedAppointment(appointment);
     setIsAppointmentBeingCreated(true);
@@ -89,66 +89,6 @@ export default function Calendar() {
     };
     fetchData().catch(console.error);
   }, []);
-
-  let addEvent = (added) => {
-    const fetchData = async () => {
-      var tzoffset = (new Date()).getTimezoneOffset() * 60000;
-      delete added.allDay;
-      added.startDate = new Date(added.startDate - tzoffset).toISOString(true);
-      added.endDate = new Date(added.endDate - tzoffset).toISOString(true);
-      const data = await fetch(
-        "http://127.0.0.1:8080/calendar/addEvent",
-        {
-          method: "POST",
-          body: JSON.stringify({ event: added }),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      const json = await data.json();
-      console.log(json);
-    };
-    fetchData().catch(console.error);
-  };
-
-  let deleteEvent = (deleted) => {
-    const fetchData = async () => {
-      delete deleted.allDay;
-      console.log(deleted);
-      const data = await fetch(
-        "http://127.0.0.1:8080/calendar/deleteEvent",
-        {
-          method: "DELETE",
-          body: JSON.stringify({event: deleted}),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      const json = await data.json();
-      console.log(json.response);
-    };
-    fetchData().catch(console.error);
-  };
-
-  let updateEvent = (updated) => {
-    const fetchData = async () => {
-      let updatedTemp = JSON.parse(JSON.stringify(updated))
-      if(updatedTemp[Object.keys(updatedTemp)[0]].hasOwnProperty('notes')){
-        delete Object.assign(updatedTemp[Object.keys(updatedTemp)[0]], {description: updatedTemp[Object.keys(updatedTemp)[0]].notes})['notes'];
-      }
-      if(updatedTemp[Object.keys(updatedTemp)[0]].hasOwnProperty('title')){
-        delete Object.assign(updatedTemp[Object.keys(updatedTemp)[0]], {summary: updatedTemp[Object.keys(updatedTemp)[0]].title})['title'];
-      }
-      console.log(updatedTemp)
-      const data = await fetch(
-        "http://127.0.0.1:8080/calendar/updateEvent",
-        {
-          method: "POST",
-          body: JSON.stringify({event: updatedTemp}),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    };
-    fetchData().catch(console.error);
-  };
 
   return (
     <div id="calendar">

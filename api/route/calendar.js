@@ -108,11 +108,8 @@ router.delete("/deleteEvent", async (req, res, next) => {
   );
   let events = ical.parse(calendar_data);
   var comp = new ical.Component(events);
-  comp.getAllSubcomponents("vevent").forEach((event) => {
-    if (event.getFirstPropertyValue("uid") === req.body.event.id) {
-      comp.removeSubcomponent(event);
-    }
-  });
+  let foundEvent = comp.getAllSubcomponents("vevent").find(event => event.getFirstPropertyValue("uid") === req.body.event.id)
+  comp.removeSubcomponent(foundEvent);
   let eventsNew = Buffer.from(comp.toString(),'utf8');
   User.updateOne(
     { _id: ObjectId("63468c2b85c7c92acc2da910") },
@@ -139,7 +136,6 @@ router.post("/updateEvent", async (req, res, next) => {
       return event;
     }
   });
-  let ind = comp.getAllSubcomponents("vevent").find(event => event.getFirstPropertyValue("uid") === Object.keys(req.body.event)[0])
   let eventsNew = Buffer.from(comp.toString(),'utf8');
   User.updateOne(
     { _id: ObjectId("63468c2b85c7c92acc2da910") },
