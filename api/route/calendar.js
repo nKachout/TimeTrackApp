@@ -19,6 +19,7 @@ function Calendar(_name, _size, _content) {
 
 function Evt(event) {
   this.title = event.getFirstPropertyValue("summary");
+  this.notes = event.getFirstPropertyValue("description");
   this.startDate = event
     .getFirstPropertyValue("dtstart")
     .toLocaleString("fr-FR", { timeZone: "Europe/Paris" });
@@ -62,22 +63,104 @@ router.get("/getAllCalendars", async (req, res) => {
 });
 
 router.post("/getCalendar", async (req, res) => {
+  let calendar_data = await getCalendarData(
+    ObjectId("63468c2b85c7c92acc2da910"),
+    req.body.name
+  );
+  if (calendar_data == null) {
+    res.send({ message: "Calendrier introuvable" });
+  } else {
+    let events = ical.parse(calendar_data);
+    var comp = new ical.Component(events);
+    var vevent = comp.getAllSubcomponents("vevent");
+    vevent = vevent.map((x) => new Evt(x));
+    res.send({ vevent });
+  }
+});
+
+router.post("/addEvent", async (req, res, next) => {
+  let calendar_data = await getCalendarData(
+    ObjectId("63468c2b85c7c92acc2da910"),
+    "edt.ics"
+  );
+  var comp = new ical.Component(ical.parse(calendar_data));
+  var vevent = new ical.Component("vevent"),
+    event = new ical.Event(vevent);
+    event.description = req.body.event.notes;
+  event.summary = req.body.event.title;
+  event.uid = req.body.event.id;
+  event.startDate = ical.Time.fromString(req.body.event.startDate);
+  event.endDate = ical.Time.fromString(req.body.event.endDate);
+  comp.addSubcomponent(vevent);
+  let eventsNew = Buffer.from(comp.toString(), "utf8");
+  User.updateOne(
+    { _id: ObjectId("63468c2b85c7c92acc2da910") },
+    { $set: { "calendars.0.content": eventsNew } }
+  ).then((x) => {
+    res.send({ message: "Ajouté avec succés" });
+  });
+});
+
+router.delete("/deleteEvent", async (req, res, next) => {
+  let calendar_data = await getCalendarData(
+    ObjectId("63468c2b85c7c92acc2da910"),
+    "edt.ics"
+  );
+  let events = ical.parse(calendar_data);
+  var comp = new ical.Component(events);
+  let foundEvent = comp.getAllSubcomponents("vevent").find(event => event.getFirstPropertyValue("uid") === req.body.event.id)
+  comp.removeSubcomponent(foundEvent);
+  let eventsNew = Buffer.from(comp.toString(),'utf8');
+  User.updateOne(
+    { _id: ObjectId("63468c2b85c7c92acc2da910") },
+    {$set: {"calendars.0.content": eventsNew}}
+  ).then((x) => {
+    res.send({ response: "Supprimé avec succés" });
+  });
+});
+
+router.post("/updateEvent", async (req, res, next) => {
+  console.log(req.body.event)
+  let calendar_data = await getCalendarData(
+    ObjectId("63468c2b85c7c92acc2da910"),
+    "edt.ics"
+  );
+  let events = ical.parse(calendar_data);
+  var comp = new ical.Component(events);
+  comp.getAllSubcomponents("vevent").map((event) => {
+    if (event.getFirstPropertyValue("uid") === Object.keys(req.body.event)[0]) {
+      let changes = req.body.event[Object.keys(req.body.event)[0]]
+      Object.keys(changes).forEach((change) => {event.updatePropertyWithValue(change, changes[change])})
+      return event;
+    } else {
+      return event;
+    }
+  });
+  let eventsNew = Buffer.from(comp.toString(),'utf8');
+  User.updateOne(
+    { _id: ObjectId("63468c2b85c7c92acc2da910") },
+    {$set: {"calendars.0.content": eventsNew}}
+  ).then((x) => {
+    res.send({ response: "Supprimé avec succés" });
+  });
+});
+
+let getCalendarData = async (userId, calendarName) => {
   let result = await User.findOne(
     {
-      _id: ObjectId("63468c2b85c7c92acc2da910"),
-      "calendars.calendar_name": req.body.name,
+      _id: userId,
+      "calendars.calendar_name": calendarName,
     },
     { "calendars.$": 1 }
   );
+  if (result == null) {
+    return null;
+  }
   let calendar_data = Buffer.from(
     result.calendars[0].content.value(true),
     "binary"
   ).toString();
-  let events = ical.parse(calendar_data);
-  var comp = new ical.Component(events);
-  var vevent = comp.getAllSubcomponents("vevent");
-  vevent = vevent.map((x) => new Evt(x));
-  res.send({ vevent });
-});
+  return calendar_data;
+};
 // Export module to allow it to be imported in other files
 module.exports = router;

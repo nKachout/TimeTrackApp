@@ -20,24 +20,11 @@ let labels_fr = {
     monthsLabel: 'mois',
     yearsLabel: 'année(s)',
 }
-let comProps ={
-    /** Specifies whether the command layout is full-size. */
-    fullSize: true,
-    /** An event raised when the Commit button is clicked. The event handler should commit an appointment changes. */
-    onCommitButtonClick: onHandleCommitButtonClick,
-    /** An event raised when the Cancel button is clicked. The event handler should close the appointment form. */
-    onCancelButtonClick: () => {},
-    /** An event raised when the Delete button is clicked. The event handler should delete an appointment. */
-    onDeleteButtonClick: () => {},
-};
-let onHandleCommitButtonClick = () => {console.log('onHandleCommitButtonClick')};
 export default function AppointmentFormCustom() {
 
     return (
         <Box>
             <AppointmentForm messages={labels_fr} >
-                <AppointmentForm.CommandLayout {...comProps} />
-                <EditingState />
             </AppointmentForm>
         </Box>
       );

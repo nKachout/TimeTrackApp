@@ -9,17 +9,16 @@ export default function ButtonDownload() {
     const formData = new FormData();
 
     formData.append("calendar", selectedFile);
-
     await fetch("http://127.0.0.1:8080/calendar/addCalendar", {
       method: "POST",
       body: formData,
     })
-    .then((result) => {
-      console.log("Success:", result);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      .then((result) => {
+        console.log("Success:", result);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     setSelectedFile(undefined);
     setIsSelected(false);
   };
