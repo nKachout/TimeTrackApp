@@ -53,7 +53,14 @@ const Login = () => {
   };
 
   return (
-    <Box m="20px">
+    <Box
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+      }}
+    >
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
@@ -68,14 +75,7 @@ const Login = () => {
           handleSubmit,
         }) => (
           <form onSubmit={handleSubmit}>
-            <Box
-              display="grid"
-              gap="30px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-              sx={{
-                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-              }}
-            >
+            <Box>
               <TextField
                 fullWidth
                 variant="filled"
@@ -94,7 +94,7 @@ const Login = () => {
                 name="userName"
                 error={!!touched.userName && !!errors.userName}
                 helperText={touched.userName && errors.userName}
-                sx={{ gridColumn: "span 2" }}
+                sx={{ marginBottom: "20px" }}
               />
               <TextField
                 fullWidth
@@ -114,7 +114,7 @@ const Login = () => {
                 name="password"
                 error={!!touched.password && !!errors.password}
                 helperText={touched.password && errors.password}
-                sx={{ gridColumn: "span 2" }}
+                sx={{ marginBottom: "20px" }}
               />
               <TextField
                 fullWidth
@@ -134,7 +134,7 @@ const Login = () => {
                 name="email"
                 error={!!touched.email && !!errors.email}
                 helperText={touched.email && errors.email}
-                sx={{ gridColumn: "span 4" }}
+                sx={{ marginBottom: "20px" }}
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
