@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, IconButton, useTheme, Button } from "@mui/material";
 import CloudDoneOutlinedIcon from "@mui/icons-material/CloudDoneOutlined";
-export default function ButtonDownload() {
+export default function ButtonDownload({handlerState}) {
   const [selectedFile, setSelectedFile] = useState(undefined);
   const [isSelected, setIsSelected] = useState(false);
 
@@ -13,12 +13,15 @@ export default function ButtonDownload() {
       method: "POST",
       body: formData,
     })
-      .then((result) => {
-        console.log("Success:", result);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    .then(async (result) => {
+      result = await result.json()
+      console.log(result)
+      console.log("Success:", result.message);
+      handlerState(result.vevent)
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
     setSelectedFile(undefined);
     setIsSelected(false);
   };
@@ -28,6 +31,10 @@ export default function ButtonDownload() {
     setSelectedFile(event.target.files[0]);
     setIsSelected(true);
   };
+
+  const handleCalendarState = (data) => {
+    handlerState(data)
+  }
 
   return (
     <Box>

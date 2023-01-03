@@ -33,17 +33,30 @@ export function deleteEvent(deleted) {
 export function updateEvent(updated) {
   const fetchData = async () => {
     let updatedTemp = JSON.parse(JSON.stringify(updated));
-    if (updatedTemp[Object.keys(updatedTemp)[0]].hasOwnProperty("notes")) {
-      delete Object.assign(updatedTemp[Object.keys(updatedTemp)[0]], {
-        description: updatedTemp[Object.keys(updatedTemp)[0]].notes,
+    var tzoffset = new Date().getTimezoneOffset() * 60000;
+    let changes = updatedTemp[Object.keys(updatedTemp)[0]];
+    if (changes.hasOwnProperty("notes")) {
+      delete Object.assign(changes, {
+        description: changes.notes,
       })["notes"];
     }
-    if (updatedTemp[Object.keys(updatedTemp)[0]].hasOwnProperty("title")) {
-      delete Object.assign(updatedTemp[Object.keys(updatedTemp)[0]], {
-        summary: updatedTemp[Object.keys(updatedTemp)[0]].title,
+    if (changes.hasOwnProperty("title")) {
+      delete Object.assign(changes, {
+        summary: changes.title,
       })["title"];
     }
-    console.log(updatedTemp);
+    if (changes.hasOwnProperty("startDate")) {
+      delete Object.assign(changes, {
+        dtstart: new Date(new Date(changes.startDate) - tzoffset).toISOString(
+          true
+        ),
+      })["startDate"];
+    }
+    if (changes.hasOwnProperty("endDate")) {
+      delete Object.assign(changes, {
+        dtend: new Date(new Date(changes.endDate) - tzoffset).toISOString(true),
+      })["endDate"];
+    }
     const data = await fetch("http://127.0.0.1:8080/calendar/updateEvent", {
       method: "POST",
       body: JSON.stringify({ event: updatedTemp }),
