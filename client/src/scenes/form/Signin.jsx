@@ -26,7 +26,6 @@ const Login = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = (values) => {
-    console.log(values);
     fetch("http://127.0.0.1:8080/user/signup", {
       method: "POST",
       body: JSON.stringify(values),
@@ -53,104 +52,114 @@ const Login = () => {
   };
 
   return (
-    <Box
-      style={{
-        position: "absolute",
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-      }}
-    >
-      <Formik
-        onSubmit={handleFormSubmit}
-        initialValues={initialValues}
-        validationSchema={checkoutSchema}
+    <Box>
+      <Box
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "660px",
+          height: "409px",
+        }}
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <Box>
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="nom d'utilisateur"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AccountCircleOutlined />
-                    </InputAdornment>
-                  ),
-                }}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.userName}
-                name="userName"
-                error={!!touched.userName && !!errors.userName}
-                helperText={touched.userName && errors.userName}
-                sx={{ marginBottom: "20px" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="password"
-                label="mot de passe"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PasswordOutlined />
-                    </InputAdornment>
-                  ),
-                }}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.password}
-                name="password"
-                error={!!touched.password && !!errors.password}
-                helperText={touched.password && errors.password}
-                sx={{ marginBottom: "20px" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="E-mail"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <MailOutlined />
-                    </InputAdornment>
-                  ),
-                }}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.email}
-                name="email"
-                error={!!touched.email && !!errors.email}
-                helperText={touched.email && errors.email}
-                sx={{ marginBottom: "20px" }}
-              />
-            </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
-              <Button
-                type="submit"
-                color="secondary"
-                variant="contained"
-                startIcon={<AssignmentOutlined />}
-              >
-                S'inscrire
-              </Button>
-            </Box>
-          </form>
-        )}
-      </Formik>
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+        <Formik
+          onSubmit={handleFormSubmit}
+          initialValues={initialValues}
+          validationSchema={checkoutSchema}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+          }) => (
+            <form onSubmit={handleSubmit}>
+              <Box>
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="nom d'utilisateur"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AccountCircleOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.userName}
+                  name="userName"
+                  error={!!touched.userName && !!errors.userName}
+                  helperText={touched.userName && errors.userName}
+                  sx={{ marginBottom: "20px" }}
+                />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="password"
+                  label="mot de passe"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PasswordOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.password}
+                  name="password"
+                  error={!!touched.password && !!errors.password}
+                  helperText={touched.password && errors.password}
+                  sx={{ marginBottom: "20px" }}
+                />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="E-mail"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <MailOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.email}
+                  name="email"
+                  error={!!touched.email && !!errors.email}
+                  helperText={touched.email && errors.email}
+                  sx={{ marginBottom: "20px" }}
+                />
+              </Box>
+              <Box display="flex" justifyContent="end" mt="20px">
+                <Button
+                  type="submit"
+                  color="secondary"
+                  variant="contained"
+                  startIcon={<AssignmentOutlined />}
+                >
+                  S'inscrire
+                </Button>
+              </Box>
+            </form>
+          )}
+        </Formik>
+      </Box>
+      <Snackbar style={{
+          position: "absolute",
+          left: "50%",
+          top: "95%",
+          transform: "translate(-50%, -50%)",
+        }}
+        open={open} autoHideDuration={3000} onClose={handleClose}>
         <Alert
           onClose={handleClose}
           severity={notifData.severity}

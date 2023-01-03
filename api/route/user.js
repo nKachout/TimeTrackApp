@@ -63,6 +63,21 @@ router.post("/signup", (req, res, next) => {
   });
 });
 
+router.get("/getUserData/:userName", (req, res, next) => {
+  // Creating empty user object
+  User.findOne({ username: req.params.userName }, { username: 1, email: 1 }, function (err, user) {
+    if (user !== null) {
+      return res.json({ severity : "info",
+        response: user,
+      });
+    } else {
+        return res.json({severity : "error",
+          message: "Les informations de l'utilisateur n'ont pas été trouvées",
+        });
+    }
+  });
+});
+
 
 // Export module to allow it to be imported in other files
 module.exports = router;

@@ -6,6 +6,7 @@ import Topbar from "./scenes/global/Topbar";
 import BumpGraph from "./scenes/bump";
 import Login from "./scenes/form/Login";
 import Signin from "./scenes/form/Signin";
+import UserSpace from "./scenes/form/UserSpace";
 import React from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
@@ -29,6 +30,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/bump" element={<BumpGraph />} />
+              <Route path="/user" element={<UserSpace />} />
             </Routes>
           </main>
         </div>
