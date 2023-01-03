@@ -45,7 +45,12 @@ router.post("/addCalendar", async (req, res, next) => {
         { _id: ObjectId("63468c2b85c7c92acc2da910") },
         { $push: { calendars: newCalendar } }
       ).then((x) => {
-        res.send({ message: "Ajouté avec succés" });
+        data = Buffer.from(data,"binary").toString();
+        let events = ical.parse(data);
+        var comp = new ical.Component(events);
+        var vevent = comp.getAllSubcomponents("vevent");
+        vevent = vevent.map((x) => new Evt(x));
+        res.send({ message: "Ajouté avec succés", vevent });
       });
     } else {
       console.log(err);
@@ -86,7 +91,7 @@ router.post("/addEvent", async (req, res, next) => {
   var comp = new ical.Component(ical.parse(calendar_data));
   var vevent = new ical.Component("vevent"),
     event = new ical.Event(vevent);
-    event.description = req.body.event.notes;
+  event.description = req.body.event.notes;
   event.summary = req.body.event.title;
   event.uid = req.body.event.id;
   event.startDate = ical.Time.fromString(req.body.event.startDate);
@@ -108,19 +113,21 @@ router.delete("/deleteEvent", async (req, res, next) => {
   );
   let events = ical.parse(calendar_data);
   var comp = new ical.Component(events);
-  let foundEvent = comp.getAllSubcomponents("vevent").find(event => event.getFirstPropertyValue("uid") === req.body.event.id)
+  let foundEvent = comp
+    .getAllSubcomponents("vevent")
+    .find((event) => event.getFirstPropertyValue("uid") === req.body.event.id);
   comp.removeSubcomponent(foundEvent);
-  let eventsNew = Buffer.from(comp.toString(),'utf8');
+  let eventsNew = Buffer.from(comp.toString(), "utf8");
   User.updateOne(
     { _id: ObjectId("63468c2b85c7c92acc2da910") },
-    {$set: {"calendars.0.content": eventsNew}}
+    { $set: { "calendars.0.content": eventsNew } }
   ).then((x) => {
     res.send({ response: "Supprimé avec succés" });
   });
 });
 
 router.post("/updateEvent", async (req, res, next) => {
-  console.log(req.body.event)
+  console.log(req.body.event);
   let calendar_data = await getCalendarData(
     ObjectId("63468c2b85c7c92acc2da910"),
     "edt.ics"
@@ -129,17 +136,21 @@ router.post("/updateEvent", async (req, res, next) => {
   var comp = new ical.Component(events);
   comp.getAllSubcomponents("vevent").map((event) => {
     if (event.getFirstPropertyValue("uid") === Object.keys(req.body.event)[0]) {
-      let changes = req.body.event[Object.keys(req.body.event)[0]]
-      Object.keys(changes).forEach((change) => {event.updatePropertyWithValue(change, changes[change])})
-      return event;
-    } else {
-      return event;
+      let changes = req.body.event[Object.keys(req.body.event)[0]];
+      Object.keys(changes).forEach((change) => {
+        if(change === "startDate" || change === "endDate"){
+          changes[change] = ical.Time.fromString(changes[change]);
+        }
+        event.updatePropertyWithValue(change, changes[change]);
+      });
+    console.log(event);
     }
+    return event;
   });
-  let eventsNew = Buffer.from(comp.toString(),'utf8');
+  let eventsNew = Buffer.from(comp.toString(), "utf8");
   User.updateOne(
     { _id: ObjectId("63468c2b85c7c92acc2da910") },
-    {$set: {"calendars.0.content": eventsNew}}
+    { $set: { "calendars.0.content": eventsNew } }
   ).then((x) => {
     res.send({ response: "Supprimé avec succés" });
   });

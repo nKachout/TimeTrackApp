@@ -26,7 +26,7 @@ export default function Calendar() {
   const colorMode = useContext(ColorModeContext);
 
   const [schedulerData, setSchedulerData] = useState([]);
-  const [addedAppointment, setAddedAppointment] = React.useState({});
+  const [addedAppointment, setAddedAppointment] = useState({});
   const [
     isAppointmentBeingCreated,
     setIsAppointmentBeingCreated,
@@ -70,7 +70,7 @@ export default function Calendar() {
     [setSchedulerData, setIsAppointmentBeingCreated, schedulerData]
   );
 
-  const onAddedAppointmentChange = React.useCallback((appointment) => {
+  const onAddedAppointmentChange = useCallback((appointment) => {
     setAddedAppointment(appointment);
     setIsAppointmentBeingCreated(true);
   });
@@ -90,6 +90,10 @@ export default function Calendar() {
     fetchData().catch(console.error);
   }, []);
 
+  let handlerState = (data) => {
+    setSchedulerData(data);
+  };
+
   return (
     <div id="calendar">
       <Box
@@ -105,7 +109,7 @@ export default function Calendar() {
           },
         }}
       >
-        <ButtonDownload />
+        <ButtonDownload handlerState={handlerState} />
         <Scheduler locale={"fr-FR"} data={schedulerData} firstDayOfWeek={1}>
           <ViewState />
           <EditingState
