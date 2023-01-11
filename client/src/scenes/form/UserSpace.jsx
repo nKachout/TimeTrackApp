@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 
@@ -35,9 +35,12 @@ const UserSpace = () => {
         width: "660px",
         height: "409px",
       }}
+      className="font-face-gm"
     >
-      <Typography>{userData.username}</Typography>
-      <Typography>{userData.email}</Typography>
+      <Typography align="center" variant="h3">{userData.username}</Typography>
+      <Divider variant="middle"/>
+      <Typography align="center" variant="h3">{userData.email}</Typography>
+      <Divider variant="middle"/>
     </Box>
   );
 };
