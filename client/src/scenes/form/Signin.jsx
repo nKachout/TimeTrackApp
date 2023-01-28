@@ -2,54 +2,21 @@ import React from "react";
 import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-import {
-  useMediaQuery,
-  InputAdornment,
-  Snackbar,
-  MuiAlert,
-  Stack,
-  Alert,
-} from "@mui/material";
+import { InputAdornment } from "@mui/material";
 import {
   AssignmentOutlined,
   AccountCircleOutlined,
   PasswordOutlined,
   MailOutlined,
 } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { register } from "../../services/services";
 
 const Login = () => {
-  const [open, setOpen] = React.useState(false);
-  const [notifData, setNotifData] = React.useState({
-    severity: "",
-    message: "",
-  });
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const dispatch = useDispatch();
 
   const handleFormSubmit = (values) => {
-    console.log(values);
-    fetch("http://127.0.0.1:8080/user/signup", {
-      method: "POST",
-      body: JSON.stringify(values),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.hasOwnProperty("severity")) {
-          setNotifData({ severity: result.severity, message: result.message });
-          setOpen(true);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-    setNotifData({ severity: "", message: "" });
+    dispatch(register(values));
   };
 
   return (
@@ -150,15 +117,6 @@ const Login = () => {
           </form>
         )}
       </Formik>
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-        <Alert
-          onClose={handleClose}
-          severity={notifData.severity}
-          sx={{ width: "100%" }}
-        >
-          {notifData.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };
