@@ -8,6 +8,7 @@ const formidable = require("formidable");
 const path = require("path");
 const Binary = require("mongodb").Binary;
 const fs = require("fs");
+const auth = require("./auth");
 var ObjectId = require("mongodb").ObjectID;
 
 function Calendar(_name, _size, _content) {
@@ -30,7 +31,7 @@ function Evt(event) {
   this.location = event.getFirstPropertyValue("location");
 }
 
-router.post("/addCalendar", async (req, res, next) => {
+router.post("/addCalendar", auth, async (req, res, next) => {
   const form = new formidable.IncomingForm();
   form.maxFileSize = 50 * 1024 * 1024; // 5MB
   form.parse(req, async (err, fields, files) => {
@@ -58,18 +59,17 @@ router.post("/addCalendar", async (req, res, next) => {
   });
 });
 
-router.get("/getAllCalendars", async (req, res) => {
-  console.log("Calendar GET");
+router.get("/getAllCalendars", auth, async (req, res) => {
   let result = await User.find(
-    { _id: ObjectId("63468c2b85c7c92acc2da910") },
+    { _id: req.user },
     { calendars: 1 }
   );
   res.send({ calendars: result });
 });
 
-router.post("/getCalendar", async (req, res) => {
+router.post("/getCalendar", auth, async (req, res) => {
   let calendar_data = await getCalendarData(
-    ObjectId("63468c2b85c7c92acc2da910"),
+    req.user,
     req.body.name
   );
   if (calendar_data == null) {
@@ -83,9 +83,9 @@ router.post("/getCalendar", async (req, res) => {
   }
 });
 
-router.post("/addEvent", async (req, res, next) => {
+router.post("/addEvent", auth, async (req, res, next) => {
   let calendar_data = await getCalendarData(
-    ObjectId("63468c2b85c7c92acc2da910"),
+    req.user,
     "edt.ics"
   );
   var comp = new ical.Component(ical.parse(calendar_data));
@@ -106,9 +106,9 @@ router.post("/addEvent", async (req, res, next) => {
   });
 });
 
-router.delete("/deleteEvent", async (req, res, next) => {
+router.delete("/deleteEvent", auth, async (req, res, next) => {
   let calendar_data = await getCalendarData(
-    ObjectId("63468c2b85c7c92acc2da910"),
+    req.user,
     "edt.ics"
   );
   let events = ical.parse(calendar_data);
@@ -126,10 +126,9 @@ router.delete("/deleteEvent", async (req, res, next) => {
   });
 });
 
-router.post("/updateEvent", async (req, res, next) => {
-  console.log(req.body.event);
+router.post("/updateEvent", auth, async (req, res, next) => {
   let calendar_data = await getCalendarData(
-    ObjectId("63468c2b85c7c92acc2da910"),
+    req.user,
     "edt.ics"
   );
   let events = ical.parse(calendar_data);
@@ -143,7 +142,6 @@ router.post("/updateEvent", async (req, res, next) => {
         }
         event.updatePropertyWithValue(change, changes[change]);
       });
-    console.log(event);
     }
     return event;
   });

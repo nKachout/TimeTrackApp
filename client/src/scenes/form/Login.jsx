@@ -1,59 +1,35 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Typography, IconButton } from "@mui/material";
+import React,{ useEffect } from "react";
+import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-import {
-  useMediaQuery,
-  InputAdornment,
-  Snackbar,
-  MuiAlert,
-  Stack,
-  Alert,
-} from "@mui/material";
+import { InputAdornment } from "@mui/material";
 import {
   LoginOutlined,
   AccountCircleOutlined,
   PasswordOutlined,
 } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { checkToken, login } from "../../services/services";
+import { getToken } from "../../utils/HelperFunctions";
 const Login = () => {
-  const [open, setOpen] = React.useState(false);
-  const [notifData, setNotifData] = React.useState({
-    severity: "",
-    message: "",
-  });
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const { token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleFormConnect = (values) => {
-    fetch("http://127.0.0.1:8080/user/login", {
-      method: "POST",
-      body: JSON.stringify(values),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (
-          !result.hasOwnProperty("severity") &&
-          result.hasOwnProperty("userData")
-        ) {
-          navigate("/dashboard");
-        } else {
-          setNotifData({ severity: result.severity, message: result.message });
-          setOpen(true);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+  useEffect(() => {
+    if (getToken() && !token) {
+      dispatch(checkToken(getToken()))
+      navigate("/timely/dashboard");
     }
-    setOpen(false);
-    setNotifData({ severity: "", message: "" });
+  }, []);
+
+  const handleFormConnect = async (values) => {
+    dispatch(login(values))
+      .unwrap()
+      .then(() => {
+        navigate("/timely/dashboard");
+      }).catch((err) => {});
   };
 
   return (
@@ -138,25 +114,6 @@ const Login = () => {
           )}
         </Formik>
       </Box>
-      <Snackbar
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: "95%",
-          transform: "translate(-50%, -50%)",
-        }}
-        open={open}
-        autoHideDuration={3000}
-        onClose={handleClose}
-      >
-        <Alert
-          onClose={handleClose}
-          severity={notifData.severity}
-          sx={{ width: "100%" }}
-        >
-          {notifData.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import Calendar from "./components/Calendar";
 import Dashboard from "./scenes/dashboard";
@@ -12,25 +11,33 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import NotificationToast from "./components/NotificationToast";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
+
+  
 
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <div className="app">
-          <main className="content font-face-gm">
+          <main className="content">
+            <NotificationToast />
             <Topbar setIsSidebar={setIsSidebar} />
             <Routes>
-              <Route path="/" element={<Login />} />
+              <Route exact path="/" element={<Login />}/>
+              <Route path="/login" element={<Login />} />
               <Route path="/signin" element={<Signin />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/bump" element={<BumpGraph />} />
-              <Route path="/user" element={<UserSpace />} />
+              <Route path="/timely" element={<PrivateRoute />}>
+                <Route path="/timely/dashboard" element={<Dashboard />} />
+                <Route path="/timely/calendar" element={<Calendar />} />
+                <Route path="/timely/bump" element={<BumpGraph />} />
+                <Route path="/timely/user" element={<UserSpace />} />
+              </Route>
             </Routes>
           </main>
         </div>

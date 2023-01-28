@@ -7,7 +7,7 @@ const Dashboard = () => {
     const colors = tokens(theme.palette.mode);
   
     return (
-      <Box m="20px"></Box>);
+      <Box m="20px">DASHBOARD</Box>);
 }
 
 export default Dashboard;

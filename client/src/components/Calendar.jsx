@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useCallback } from "react";
-import { Box, IconButton, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { ColorModeContext, tokens } from "../theme";
 import ButtonDownload from "./ButtonDownload";
 import {
@@ -20,6 +20,9 @@ import {
 
 import AppointmentFormCustom from "./AppointmentFormCustom";
 import { addEvent, deleteEvent, updateEvent } from "../functions/taskActions";
+import { authHeader } from "../utils/HelperFunctions";
+
+
 export default function Calendar() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -80,7 +83,7 @@ export default function Calendar() {
       const data = await fetch("http://127.0.0.1:8080/calendar/getCalendar", {
         method: "POST",
         body: JSON.stringify({ name: "edt.ics" }),
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...authHeader()},
       });
       const json = await data.json();
       if (json.vevent.length > 0) {
