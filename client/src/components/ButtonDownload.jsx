@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Box, IconButton, useTheme, Button } from "@mui/material";
+import React, { useState } from "react";
+import { Box, IconButton, Button } from "@mui/material";
 import CloudDoneOutlinedIcon from "@mui/icons-material/CloudDoneOutlined";
 export default function ButtonDownload({handlerState}) {
   const [selectedFile, setSelectedFile] = useState(undefined);
@@ -15,8 +15,6 @@ export default function ButtonDownload({handlerState}) {
     })
     .then(async (result) => {
       result = await result.json()
-      console.log(result)
-      console.log("Success:", result.message);
       handlerState(result.vevent)
     })
     .catch((error) => {

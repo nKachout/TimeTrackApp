@@ -1,16 +1,16 @@
+import { authHeader } from "../utils/HelperFunctions";
+
 export function addEvent(added) {
   const fetchData = async () => {
     var tzoffset = new Date().getTimezoneOffset() * 60000;
     delete added.allDay;
     added.startDate = new Date(added.startDate - tzoffset).toISOString(true);
     added.endDate = new Date(added.endDate - tzoffset).toISOString(true);
-    const data = await fetch("http://127.0.0.1:8080/calendar/addEvent", {
+    await fetch("http://127.0.0.1:8080/calendar/addEvent", {
       method: "POST",
       body: JSON.stringify({ event: added }),
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...authHeader() },
     });
-    const json = await data.json();
-    console.log(json);
   };
   fetchData().catch(console.error);
 }
@@ -18,14 +18,11 @@ export function addEvent(added) {
 export function deleteEvent(deleted) {
   const fetchData = async () => {
     delete deleted.allDay;
-    console.log(deleted);
-    const data = await fetch("http://127.0.0.1:8080/calendar/deleteEvent", {
+    await fetch("http://127.0.0.1:8080/calendar/deleteEvent", {
       method: "DELETE",
       body: JSON.stringify({ event: deleted }),
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...authHeader() },
     });
-    const json = await data.json();
-    console.log(json.response);
   };
   fetchData().catch(console.error);
 }
@@ -57,10 +54,10 @@ export function updateEvent(updated) {
         dtend: new Date(new Date(changes.endDate) - tzoffset).toISOString(true),
       })["endDate"];
     }
-    const data = await fetch("http://127.0.0.1:8080/calendar/updateEvent", {
+    await fetch("http://127.0.0.1:8080/calendar/updateEvent", {
       method: "POST",
       body: JSON.stringify({ event: updatedTemp }),
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...authHeader() },
     });
   };
   fetchData().catch(console.error);
