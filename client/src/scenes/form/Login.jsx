@@ -23,7 +23,7 @@ const Login = () => {
         navigate("/timely/dashboard");
       });
     }
-  }, [token]);
+  }, []);
 
   const handleFormConnect = async (values) => {
     dispatch(login(values))
