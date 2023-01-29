@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+.font-face-gm {
+  font-family: "Moon2.0";
+  letter-spacing: 2px;
+ }

@@ -5,6 +5,7 @@ import Topbar from "./scenes/global/Topbar";
 import BumpGraph from "./scenes/bump";
 import Login from "./scenes/form/Login";
 import Signin from "./scenes/form/Signin";
+import UserSpace from "./scenes/form/UserSpace";
 import React from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
@@ -17,8 +18,6 @@ function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
 
-  
-
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
@@ -28,13 +27,14 @@ function App() {
             <NotificationToast />
             <Topbar setIsSidebar={setIsSidebar} />
             <Routes>
-              <Route exact path="/" element={<Login />}/>
+              <Route path="/" element={<Login />}/>
               <Route path="/login" element={<Login />} />
               <Route path="/signin" element={<Signin />} />
               <Route path="/timely" element={<PrivateRoute />}>
                 <Route path="/timely/dashboard" element={<Dashboard />} />
                 <Route path="/timely/calendar" element={<Calendar />} />
                 <Route path="/timely/bump" element={<BumpGraph />} />
+                <Route path="/timely/user" element={<UserSpace />} />
               </Route>
             </Routes>
           </main>
