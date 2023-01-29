@@ -31,6 +31,10 @@ const Topbar = (props) => {
     navigate("/timely/calendar");
   };
 
+  const handleSettings = () => {
+    navigate("/timely/user");
+  };
+
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
       {/* SEARCH BAR */}
@@ -57,19 +61,20 @@ const Topbar = (props) => {
         <IconButton>
           <NotificationsOutlinedIcon />
         </IconButton>
-        <IconButton>
-          <SettingsOutlinedIcon />
-        </IconButton>
+
         <IconButton>
           <PersonOutlinedIcon />
         </IconButton>
         {token !== null && (
           <>
-            <IconButton onClick={handleLogout}>
-              <LogoutOutlinedIcon />
-            </IconButton>
             <IconButton onClick={handleGoCalendar}>
               <CalendarMonthOutlinedIcon />
+            </IconButton>
+            <IconButton onClick={handleSettings}>
+              <SettingsOutlinedIcon />
+            </IconButton>
+            <IconButton onClick={handleLogout}>
+              <LogoutOutlinedIcon />
             </IconButton>
           </>
         )}

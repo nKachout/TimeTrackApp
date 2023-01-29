@@ -19,10 +19,11 @@ const Login = () => {
 
   useEffect(() => {
     if (getToken() && !token) {
-      dispatch(checkToken(getToken()))
-      navigate("/timely/dashboard");
+      dispatch(checkToken(getToken())).unwrap().then(() => {
+        navigate("/timely/dashboard");
+      });
     }
-  }, []);
+  }, [token]);
 
   const handleFormConnect = async (values) => {
     dispatch(login(values))

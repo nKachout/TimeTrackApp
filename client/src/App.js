@@ -18,8 +18,6 @@ function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
 
-  
-
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
@@ -29,7 +27,7 @@ function App() {
             <NotificationToast />
             <Topbar setIsSidebar={setIsSidebar} />
             <Routes>
-              <Route exact path="/" element={<Login />}/>
+              <Route path="/" element={<Login />}/>
               <Route path="/login" element={<Login />} />
               <Route path="/signin" element={<Signin />} />
               <Route path="/timely" element={<PrivateRoute />}>

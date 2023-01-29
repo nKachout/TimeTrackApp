@@ -1,26 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Box, Button, Divider, Typography } from "@mui/material";
-import { Formik } from "formik";
-import * as yup from "yup";
+import { useSelector } from "react-redux";
+
 
 const UserSpace = () => {
-  const [userData, setUserData] = React.useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetch(
-        "http://127.0.0.1:8080/user/getUserData/najimk",
-        {
-          method: "GET",
-        }
-      );
-      const json = await data.json();
-      if (Object.keys(json.response).length > 0) {
-        setUserData(json.response);
-      }
-    };
-    fetchData().catch(console.error);
-  }, []);
+  const { userData } = useSelector((state) => state.auth);
 
   return (
     <Box
@@ -37,9 +21,9 @@ const UserSpace = () => {
       }}
       className="font-face-gm"
     >
-      <Typography align="center" variant="h3">{userData.username}</Typography>
+      <Typography variant="h3">   Nom d'utilisateur : {userData.userName}</Typography>
       <Divider variant="middle"/>
-      <Typography align="center" variant="h3">{userData.email}</Typography>
+      <Typography variant="h3">  e-mail : {userData.email}</Typography>
       <Divider variant="middle"/>
     </Box>
   );
