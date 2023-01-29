@@ -38,12 +38,12 @@ router.post("/addCalendar", auth, async (req, res, next) => {
     if (!err) {
       var data = fs.readFileSync(files.calendar.filepath);
       let newCalendar = new Calendar(
-        files.calendar.originalFilename,
+        "edt.ics",
         files.calendar.size,
         Binary(data)
       );
       User.updateOne(
-        { _id: ObjectId("63468c2b85c7c92acc2da910") },
+        { _id: req.user },
         { $push: { calendars: newCalendar } }
       ).then((x) => {
         data = Buffer.from(data,"binary").toString();

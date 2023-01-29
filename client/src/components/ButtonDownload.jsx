@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Box, IconButton, Button } from "@mui/material";
 import CloudDoneOutlinedIcon from "@mui/icons-material/CloudDoneOutlined";
-export default function ButtonDownload({handlerState}) {
+import { authHeader } from "../utils/HelperFunctions";
+
+export default function ButtonDownload({ handlerState }) {
   const [selectedFile, setSelectedFile] = useState(undefined);
   const [isSelected, setIsSelected] = useState(false);
 
@@ -12,14 +14,15 @@ export default function ButtonDownload({handlerState}) {
     await fetch("http://127.0.0.1:8080/calendar/addCalendar", {
       method: "POST",
       body: formData,
+      headers: { ...authHeader() },
     })
-    .then(async (result) => {
-      result = await result.json()
-      handlerState(result.vevent)
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      .then(async (result) => {
+        result = await result.json();
+        if (result.hasOwnProperty("vevent")) handlerState(result.vevent);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     setSelectedFile(undefined);
     setIsSelected(false);
   };
@@ -31,8 +34,8 @@ export default function ButtonDownload({handlerState}) {
   };
 
   const handleCalendarState = (data) => {
-    handlerState(data)
-  }
+    handlerState(data);
+  };
 
   return (
     <Box>
